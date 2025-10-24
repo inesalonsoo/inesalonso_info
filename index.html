@@ -1,287 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Uncertainty Box - A digital exploration of observation and possibility">
-    <title>The Uncertainty Box</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            color: #2c3e50;
-        }
-        
-        /* Main container */
-        .container {
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        /* Title */
-        h1 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 3rem;
-            letter-spacing: 0.5px;
-            color: #34495e;
-        }
-        
-        /* The uncertainty box */
-        .box-container {
-            margin: 3rem 0;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .box {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: shimmer 4s ease-in-out infinite;
-        }
-        
-        .box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
-        }
-        
-        .box:active {
-            transform: translateY(-2px);
-        }
-        
-        /* Shimmer animation */
-        @keyframes shimmer {
-            0%, 100% {
-                opacity: 0.9;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.02);
-            }
-        }
-        
-        /* Inner glow effect */
-        .box::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 10%;
-            right: 10%;
-            bottom: 10%;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            animation: pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.3;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-        
-        /* Subtitle */
-        .subtitle {
-            font-size: 0.9rem;
-            font-weight: 300;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
-            font-style: italic;
-        }
-        
-        /* Phrase display */
-        .phrase {
-            font-size: 1.5rem;
-            font-weight: 400;
-            line-height: 1.6;
-            color: #2c3e50;
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 2rem 0;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-        
-        .phrase.fade-out {
-            opacity: 0;
-        }
-        
-        /* Social links */
-        .social-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin: 3rem 0;
-        }
-        
-        .social-links a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 400;
-            transition: color 0.3s ease, transform 0.3s ease;
-            display: inline-block;
-        }
-        
-        .social-links a:hover {
-            color: #764ba2;
-            transform: translateY(-2px);
-        }
-        
-        /* Footer */
-        footer {
-            position: fixed;
-            bottom: 2rem;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #95a5a6;
-            font-weight: 300;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 640px) {
-            h1 {
-                font-size: 1.5rem;
-                margin-bottom: 2rem;
-            }
-            
-            .box {
-                width: 160px;
-                height: 160px;
-            }
-            
-            .phrase {
-                font-size: 1.2rem;
-                min-height: 3rem;
-            }
-            
-            .social-links {
-                gap: 1.5rem;
-                flex-wrap: wrap;
-            }
-            
-            footer {
-                font-size: 0.75rem;
-                padding: 0 1rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Uncertainty Box - Observe, collapse, discover." />
+  <title>The Uncertainty Box</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #cfe9ff 0%, #eaf4ff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #0f1621;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 400;
+      color: #0f1621;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #3d4a63;
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    /* 3D Box */
+    .scene {
+      width: 180px;
+      height: 180px;
+      perspective: 600px;
+      cursor: pointer;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(30deg);
+      transition: transform 1s;
+    }
+
+    .scene:hover .cube {
+      transform: rotateX(-20deg) rotateY(390deg);
+    }
+
+    .face {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(135deg, #b2d0ff, #8fb9ff);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 10px 25px rgba(10, 30, 70, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      color: #0f1621;
+    }
+
+    .front  { transform: translateZ(90px); }
+    .back   { transform: rotateY(180deg) translateZ(90px); }
+    .right  { transform: rotateY(90deg) translateZ(90px); }
+    .left   { transform: rotateY(-90deg) translateZ(90px); }
+    .top    { transform: rotateX(90deg) translateZ(90px); }
+    .bottom { transform: rotateX(-90deg) translateZ(90px); }
+
+    .phrase {
+      margin: 2.5rem 0 2rem;
+      font-size: 1.3rem;
+      min-height: 3rem;
+      color: #0f1621;
+      transition: opacity 0.5s ease;
+      text-align: center;
+    }
+
+    .phrase.fade-out {
+      opacity: 0;
+    }
+
+    footer {
+      font-size: 0.85rem;
+      color: #4b5b74;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    a.link {
+      color: #0f62fe;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a.link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .scene { width: 140px; height: 140px; }
+      .face  { width: 140px; height: 140px; }
+      .phrase { font-size: 1.1rem; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>The Uncertainty Box</h1>
-        
-        <div class="box-container" id="boxContainer">
-            <div class="box"></div>
-            <p class="subtitle">The content of this box changes every time you look at it.</p>
-        </div>
-        
-        <div class="phrase" id="phrase">Click the box to observe</div>
-        
-        <div class="social-links">
-            <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="mailto:your.email@example.com">Email</a>
-        </div>
+  <h1>The Uncertainty Box</h1>
+  <p class="subtitle">Observe. Collapse. Discover.</p>
+
+  <div class="scene" id="boxScene">
+    <div class="cube">
+      <div class="face front"></div>
+      <div class="face back"></div>
+      <div class="face right"></div>
+      <div class="face left"></div>
+      <div class="face top"></div>
+      <div class="face bottom"></div>
     </div>
-    
-    <footer>
-        Created by Inés Alonso · Computer Science & Quantum Computing
-    </footer>
-    
-    <script>
-        // Array of poetic phrases
-        const phrases = [
-            "Possibility lives here.",
-            "You changed it by observing.",
-            "Order disguised as chance.",
-            "Everything shifts a little when seen.",
-            "Noise, meaning, and me.",
-            "Uncertainty is the beginning of understanding."
-        ];
-        
-        // Keep track of the last phrase to avoid repetition
-        let lastPhraseIndex = -1;
-        
-        // Get DOM elements
-        const boxContainer = document.getElementById('boxContainer');
-        const phraseElement = document.getElementById('phrase');
-        
-        /**
-         * Get a random phrase that's different from the last one
-         */
-        function getRandomPhrase() {
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * phrases.length);
-            } while (newIndex === lastPhraseIndex && phrases.length > 1);
-            
-            lastPhraseIndex = newIndex;
-            return phrases[newIndex];
-        }
-        
-        /**
-         * Update the displayed phrase with fade animation
-         */
-        function updatePhrase() {
-            // Fade out
-            phraseElement.classList.add('fade-out');
-            
-            // Wait for fade out, then change text and fade in
-            setTimeout(() => {
-                phraseElement.textContent = getRandomPhrase();
-                phraseElement.classList.remove('fade-out');
-            }, 500);
-        }
-        
-        // Add click event listener to the box container
-        boxContainer.addEventListener('click', updatePhrase);
-        
-        // Optional: Add keyboard support for accessibility
-        boxContainer.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                updatePhrase();
-            }
-        });
-        
-        // Make the box focusable for keyboard navigation
-        boxContainer.setAttribute('tabindex', '0');
-        boxContainer.setAttribute('role', 'button');
-        boxContainer.setAttribute('aria-label', 'Click to reveal a new phrase');
-    </script>
+  </div>
+
+  <div class="phrase" id="phrase">Click the box to measure.</div>
+
+  <footer>
+    Created by Inés Alonso · Computer Science & Quantum Computing
+  </footer>
+
+  <script>
+    const phrase = document.getElementById('phrase');
+    const boxScene = document.getElementById('boxScene');
+
+    // Define collapses → each "state" links somewhere different
+    const collapses = [
+      { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/yourusername" },
+      { text: "You measured |GitHub⟩", url: "https://github.com/yourusername" },
+      { text: "You measured |Portfolio⟩", url: "https://yourportfolio.com" },
+      { text: "You measured |Résumé⟩", url: "https://drive.google.com/your-resume-link" }
+    ];
+
+    let lastIndex = -1;
+
+    function randomCollapse() {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * collapses.length);
+      } while (newIndex === lastIndex && collapses.length > 1);
+      lastIndex = newIndex;
+      return collapses[newIndex];
+    }
+
+    function collapseBox() {
+      phrase.classList.add('fade-out');
+      setTimeout(() => {
+        const { text, url } = randomCollapse();
+        phrase.innerHTML = `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        phrase.classList.remove('fade-out');
+      }, 500);
+    }
+
+    boxScene.addEventListener('click', collapseBox);
+    boxScene.setAttribute('tabindex', '0');
+    boxScene.setAttribute('role', 'button');
+    boxScene.setAttribute('aria-label', 'Click to collapse into a new state');
+    boxScene.addEventListener('keypress', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        collapseBox();
+      }
+    });
+  </script>
 </body>
 </html>
