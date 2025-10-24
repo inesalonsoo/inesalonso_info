@@ -3,155 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="The Uncertainty Box - Inés Alonso: Computer Scientist, Quantum Systems Researcher" />
+  <meta name="description" content="The Uncertainty Box – Inés Alonso: Computer Scientist & Quantum Systems Researcher" />
   <title>The Uncertainty Box</title>
 
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(135deg,#cfe9ff 0%,#eaf4ff 100%);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      color:#0f1621;
+      overflow:hidden;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #cfe9ff 0%, #eaf4ff 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #0f1621;
-      overflow: hidden;
+    h1{font-size:2rem;font-weight:400;margin-bottom:1rem;}
+    .subtitle{font-size:0.95rem;color:#3d4a63;font-style:italic;margin-bottom:3rem;}
+
+    .scene{width:200px;height:200px;perspective:800px;cursor:pointer;position:relative;z-index:10;}
+    .cube{
+      width:100%;height:100%;position:relative;
+      transform-style:preserve-3d;
+      transform:rotateX(-20deg) rotateY(30deg);
+      transition:transform 1s ease;
+    }
+    .scene:hover .cube:not(.opening){transform:rotateX(-20deg) rotateY(390deg);}
+
+    .face{
+      position:absolute;width:200px;height:200px;
+      background:linear-gradient(135deg,#b2d0ff,#8fb9ff);
+      border:1px solid rgba(255,255,255,0.4);
+      box-shadow:0 10px 25px rgba(10,30,70,0.15);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
     }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 400;
-      color: #0f1621;
-      margin-bottom: 1rem;
+    .front{transform:translateZ(100px);}
+    .back{transform:rotateY(180deg) translateZ(100px);}
+    .right{transform:rotateY(90deg) translateZ(100px);}
+    .left{transform:rotateY(-90deg) translateZ(100px);}
+    .top{transform:rotateX(90deg) translateZ(100px);}
+    .bottom{transform:rotateX(-90deg) translateZ(100px);}
+
+    .inside-text{
+      position:relative;z-index:2;
+      color:#0f62fe;font-size:1rem;font-weight:500;text-align:center;
+      opacity:1;transition:opacity .6s ease;pointer-events:auto;
+    }
+    .inside-text.fade-out{opacity:0;}
+
+    .cat{
+      position:absolute;width:70%;opacity:0;
+      filter:brightness(.9) contrast(1.1);
+      transition:opacity 1.2s ease;
+      pointer-events:none;user-select:none;
+    }
+    .cat.visible{opacity:.25;}
+
+    .cube.opening{animation:openCube 2s forwards ease-in-out;}
+    @keyframes openCube{
+      0%{transform:rotateX(-20deg) rotateY(30deg) scale(1);}
+      100%{transform:rotateX(0deg) rotateY(0deg) translateZ(120px) scale(1.4);}
     }
 
-    .subtitle {
-      font-size: 0.95rem;
-      color: #3d4a63;
-      font-style: italic;
-      margin-bottom: 3rem;
+    .cube.resetting{animation:resetCube 1.5s forwards ease-in-out;}
+    @keyframes resetCube{
+      0%{transform:rotateX(0deg) rotateY(0deg) translateZ(120px) scale(1.4);}
+      100%{transform:rotateX(-20deg) rotateY(30deg) scale(1);}
     }
 
-    /* Scene container for perspective */
-    .scene {
-      width: 200px;
-      height: 200px;
-      perspective: 800px;
-      cursor: pointer;
-    }
+    footer{font-size:.85rem;color:#4b5b74;margin-top:3rem;text-align:center;}
+    a.link{color:#0f62fe;text-decoration:none;font-weight:500;}
+    a.link:hover{text-decoration:underline;}
 
-    /* Cube styling */
-    .cube {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(-20deg) rotateY(30deg);
-      transition: transform 1s ease;
-    }
-
-    .scene:hover .cube {
-      transform: rotateX(-20deg) rotateY(390deg);
-    }
-
-    .face {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      background: linear-gradient(135deg, #b2d0ff, #8fb9ff);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 10px 25px rgba(10, 30, 70, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .front  { transform: translateZ(100px); }
-    .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY(90deg) translateZ(100px); }
-    .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX(90deg) translateZ(100px); }
-    .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-    /* Measurement text inside cube */
-    .inside-text {
-      position: relative;
-      z-index: 2;
-      color: #0f62fe;
-      font-size: 1rem;
-      font-weight: 500;
-      text-align: center;
-      opacity: 1;
-      transition: opacity 0.6s ease;
-      pointer-events: none;
-    }
-
-    .inside-text.fade-out {
-      opacity: 0;
-    }
-
-    /* Hidden cat initially */
-    .cat {
-      position: absolute;
-      width: 70%;
-      opacity: 0;
-      filter: brightness(0.9) contrast(1.1);
-      pointer-events: none;
-      user-select: none;
-      transition: opacity 1.2s ease;
-    }
-
-    .cat.visible {
-      opacity: 0.25;
-    }
-
-    /* Cube "opening" animation */
-    .cube.opening {
-      animation: openCube 2s forwards ease-in-out;
-    }
-
-    @keyframes openCube {
-      0% {
-        transform: rotateX(-20deg) rotateY(30deg) scale(1);
-      }
-      100% {
-        transform: rotateX(0deg) rotateY(0deg) translateZ(120px) scale(1.4);
-      }
-    }
-
-    footer {
-      font-size: 0.85rem;
-      color: #4b5b74;
-      margin-top: 3rem;
-      text-align: center;
-    }
-
-    a.link {
-      color: #0f62fe;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    a.link:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 640px) {
-      .scene { width: 150px; height: 150px; }
-      .face  { width: 150px; height: 150px; }
-      h1 { font-size: 1.5rem; }
-      .inside-text { font-size: 0.9rem; }
+    @media(max-width:640px){
+      .scene{width:150px;height:150px;}
+      .face{width:150px;height:150px;}
+      h1{font-size:1.5rem;}
+      .inside-text{font-size:.9rem;}
     }
   </style>
 </head>
@@ -163,7 +96,7 @@
   <div class="scene" id="boxScene">
     <div class="cube" id="cube">
       <div class="face front">
-        <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" id="catImage" />
+        <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" id="catImage"/>
         <p class="inside-text" id="insideText">Click to measure</p>
       </div>
       <div class="face back"></div>
@@ -174,62 +107,75 @@
     </div>
   </div>
 
-  <footer>
-    Created by Inés Alonso · Computer Science & Quantum Computing
-  </footer>
+  <footer>Created by Inés Alonso · Computer Science & Quantum Computing</footer>
 
   <script>
-    const cube = document.getElementById('cube');
-    const insideText = document.getElementById('insideText');
-    const catImage = document.getElementById('catImage');
+    const cube=document.getElementById('cube');
+    const insideText=document.getElementById('insideText');
+    const catImage=document.getElementById('catImage');
+    const boxScene=document.getElementById('boxScene');
+    let measured=false;
 
-    const collapses = [
-      { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/inesalonsocl/" },
-      { text: "You measured |GitHub⟩", url: "https://github.com/inesalonsoo" },
-      { text: "You measured |Portfolio⟩", url: "https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" },
-      { text: "You measured |Résumé⟩", url: "https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78" }
+    const collapses=[
+      {text:"You measured |LinkedIn⟩",url:"https://linkedin.com/in/inesalonsocl/"},
+      {text:"You measured |GitHub⟩",url:"https://github.com/inesalonsoo"},
+      {text:"You measured |Portfolio⟩",url:"https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"},
+      {text:"You measured |Résumé⟩",url:"https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78"}
     ];
+    let lastIndex=-1;
 
-    let lastIndex = -1;
-
-    function randomCollapse() {
+    function randomCollapse(){
       let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * collapses.length);
-      } while (newIndex === lastIndex && collapses.length > 1);
-      lastIndex = newIndex;
+      do{newIndex=Math.floor(Math.random()*collapses.length);}
+      while(newIndex===lastIndex&&collapses.length>1);
+      lastIndex=newIndex;
       return collapses[newIndex];
     }
 
-    function collapseBox() {
-      const { text, url } = randomCollapse();
-
-      // Hide old text before update
-      insideText.classList.add('fade-out');
-
-      setTimeout(() => {
-        insideText.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
-        insideText.classList.remove('fade-out');
-        insideText.style.opacity = 1;
-
-        // Show cat after measurement
-        catImage.classList.add('visible');
-      }, 700);
-
-      // Animate cube zoom-in
-      cube.classList.add('opening');
+    function collapseBox(){
+      if(!measured){
+        const {text,url}=randomCollapse();
+        insideText.classList.add('fade-out');
+        setTimeout(()=>{
+          insideText.innerHTML=`<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
+          insideText.classList.remove('fade-out');
+          catImage.classList.add('visible');
+        },700);
+        cube.classList.remove('resetting');
+        cube.classList.add('opening');
+        measured=true;
+      }
     }
 
-    const boxScene = document.getElementById('boxScene');
-    boxScene.addEventListener('click', collapseBox);
-    boxScene.setAttribute('tabindex', '0');
-    boxScene.setAttribute('role', 'button');
-    boxScene.setAttribute('aria-label', 'Click to collapse into a new state');
-    boxScene.addEventListener('keypress', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        collapseBox();
+    function resetBox(){
+      if(measured){
+        insideText.classList.add('fade-out');
+        setTimeout(()=>{
+          insideText.textContent="Click to measure";
+          insideText.classList.remove('fade-out');
+          catImage.classList.remove('visible');
+        },500);
+        cube.classList.remove('opening');
+        cube.classList.add('resetting');
+        measured=false;
       }
+    }
+
+    boxScene.addEventListener('click',collapseBox);
+
+    // Click outside resets
+    document.addEventListener('click',e=>{
+      const clickedInside=boxScene.contains(e.target);
+      const clickedLink=e.target.closest('a.link');
+      if(!clickedInside && measured){resetBox();}
+      if(clickedLink){e.stopPropagation();} // allow link click
+    });
+
+    boxScene.setAttribute('tabindex','0');
+    boxScene.setAttribute('role','button');
+    boxScene.setAttribute('aria-label','Click to collapse into a new state');
+    boxScene.addEventListener('keypress',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();collapseBox();}
     });
   </script>
 </body>
