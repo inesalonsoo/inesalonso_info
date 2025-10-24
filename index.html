@@ -42,21 +42,22 @@
       margin-bottom: 3rem;
     }
 
-    /* 3D Box */
+    /* Scene container for perspective */
     .scene {
-      width: 180px;
-      height: 180px;
-      perspective: 600px;
+      width: 200px;
+      height: 200px;
+      perspective: 800px;
       cursor: pointer;
     }
 
+    /* Cube styling */
     .cube {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
       transform: rotateX(-20deg) rotateY(30deg);
-      transition: transform 1s;
+      transition: transform 1s ease;
     }
 
     .scene:hover .cube {
@@ -65,54 +66,57 @@
 
     .face {
       position: absolute;
-      width: 180px;
-      height: 180px;
+      width: 200px;
+      height: 200px;
       background: linear-gradient(135deg, #b2d0ff, #8fb9ff);
       border: 1px solid rgba(255, 255, 255, 0.4);
       box-shadow: 0 10px 25px rgba(10, 30, 70, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 500;
-      color: #0f1621;
       overflow: hidden;
     }
 
-    /* Faces positioning */
-    .front  { transform: translateZ(90px); }
-    .back   { transform: rotateY(180deg) translateZ(90px); }
-    .right  { transform: rotateY(90deg) translateZ(90px); }
-    .left   { transform: rotateY(-90deg) translateZ(90px); }
-    .top    { transform: rotateX(90deg) translateZ(90px); }
-    .bottom { transform: rotateX(-90deg) translateZ(90px); }
-
-    /* Cat silhouette inside cube */
-    .cat {
-      position: absolute;
-      width: 70%;
-      opacity: 0.25;
-      filter: brightness(0.9) contrast(1.1);
-      pointer-events: none;
-      user-select: none;
-    }
+    .front  { transform: translateZ(100px); }
+    .back   { transform: rotateY(180deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .left   { transform: rotateY(-90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
     /* Measurement text inside cube */
     .inside-text {
       position: relative;
       z-index: 2;
       color: #0f62fe;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 500;
       text-align: center;
-      animation: fadeIn 0.6s ease;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .inside-text.fade-out {
+      opacity: 0;
     }
 
-    /* Cube opening animation */
+    /* Hidden cat initially */
+    .cat {
+      position: absolute;
+      width: 70%;
+      opacity: 0;
+      filter: brightness(0.9) contrast(1.1);
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 1.2s ease;
+    }
+
+    .cat.visible {
+      opacity: 0.25;
+    }
+
+    /* Cube "opening" animation */
     .cube.opening {
       animation: openCube 2s forwards ease-in-out;
     }
@@ -122,46 +126,8 @@
         transform: rotateX(-20deg) rotateY(30deg) scale(1);
       }
       100% {
-        transform: rotateX(-10deg) rotateY(0deg) translateZ(100px) scale(1.5);
-        opacity: 0;
+        transform: rotateX(0deg) rotateY(0deg) translateZ(120px) scale(1.4);
       }
-    }
-
-    /* Inside view */
-    .inside-view {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #cfe9ff 0%, #eaf4ff 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 1s ease, visibility 1s ease;
-      z-index: 5;
-    }
-
-    .inside-view.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .cat-large {
-      width: 200px;
-      opacity: 0.25;
-      filter: brightness(0.9) contrast(1.1);
-      margin-bottom: 1.5rem;
-    }
-
-    #insidePhrase {
-      font-size: 1.3rem;
-      color: #0f62fe;
-      text-align: center;
-      font-weight: 500;
     }
 
     footer {
@@ -182,9 +148,10 @@
     }
 
     @media (max-width: 640px) {
-      .scene { width: 140px; height: 140px; }
-      .face  { width: 140px; height: 140px; }
+      .scene { width: 150px; height: 150px; }
+      .face  { width: 150px; height: 150px; }
       h1 { font-size: 1.5rem; }
+      .inside-text { font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -196,7 +163,7 @@
   <div class="scene" id="boxScene">
     <div class="cube" id="cube">
       <div class="face front">
-        <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" />
+        <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" id="catImage" />
         <p class="inside-text" id="insideText">Click to measure</p>
       </div>
       <div class="face back"></div>
@@ -211,16 +178,10 @@
     Created by Inés Alonso · Computer Science & Quantum Computing
   </footer>
 
-  <!-- Inside "measured" state -->
-  <div class="inside-view" id="insideView">
-    <img src="cat-outline.png" alt="Schrödinger's cat" class="cat-large" />
-    <p id="insidePhrase">You measured |LinkedIn⟩</p>
-  </div>
-
   <script>
     const cube = document.getElementById('cube');
-    const insideView = document.getElementById('insideView');
-    const insidePhrase = document.getElementById('insidePhrase');
+    const insideText = document.getElementById('insideText');
+    const catImage = document.getElementById('catImage');
 
     const collapses = [
       { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/inesalonsocl/" },
@@ -242,15 +203,21 @@
 
     function collapseBox() {
       const { text, url } = randomCollapse();
-      insidePhrase.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
-      
-      // Play cube opening animation
-      cube.classList.add('opening');
 
-      // Show inside view after animation
+      // Hide old text before update
+      insideText.classList.add('fade-out');
+
       setTimeout(() => {
-        insideView.classList.add('active');
-      }, 1500);
+        insideText.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
+        insideText.classList.remove('fade-out');
+        insideText.style.opacity = 1;
+
+        // Show cat after measurement
+        catImage.classList.add('visible');
+      }, 700);
+
+      // Animate cube zoom-in
+      cube.classList.add('opening');
     }
 
     const boxScene = document.getElementById('boxScene');
