@@ -25,6 +25,7 @@
       justify-content: center;
       align-items: center;
       color: #0f1621;
+      overflow: hidden;
     }
 
     h1 {
@@ -76,7 +77,15 @@
       color: #0f1621;
       overflow: hidden;
     }
-    
+
+    /* Faces positioning */
+    .front  { transform: translateZ(90px); }
+    .back   { transform: rotateY(180deg) translateZ(90px); }
+    .right  { transform: rotateY(90deg) translateZ(90px); }
+    .left   { transform: rotateY(-90deg) translateZ(90px); }
+    .top    { transform: rotateX(90deg) translateZ(90px); }
+    .bottom { transform: rotateX(-90deg) translateZ(90px); }
+
     /* Cat silhouette inside cube */
     .cat {
       position: absolute;
@@ -86,7 +95,7 @@
       pointer-events: none;
       user-select: none;
     }
-    
+
     /* Measurement text inside cube */
     .inside-text {
       position: relative;
@@ -97,30 +106,62 @@
       text-align: center;
       animation: fadeIn 0.6s ease;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
-    .front  { transform: translateZ(90px); }
-    .back   { transform: rotateY(180deg) translateZ(90px); }
-    .right  { transform: rotateY(90deg) translateZ(90px); }
-    .left   { transform: rotateY(-90deg) translateZ(90px); }
-    .top    { transform: rotateX(90deg) translateZ(90px); }
-    .bottom { transform: rotateX(-90deg) translateZ(90px); }
-
-    .phrase {
-      margin: 2.5rem 0 2rem;
-      font-size: 1.3rem;
-      min-height: 3rem;
-      color: #0f1621;
-      transition: opacity 0.5s ease;
-      text-align: center;
+    /* Cube opening animation */
+    .cube.opening {
+      animation: openCube 2s forwards ease-in-out;
     }
 
-    .phrase.fade-out {
+    @keyframes openCube {
+      0% {
+        transform: rotateX(-20deg) rotateY(30deg) scale(1);
+      }
+      100% {
+        transform: rotateX(-10deg) rotateY(0deg) translateZ(100px) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* Inside view */
+    .inside-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #cfe9ff 0%, #eaf4ff 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease, visibility 1s ease;
+      z-index: 5;
+    }
+
+    .inside-view.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cat-large {
+      width: 200px;
+      opacity: 0.25;
+      filter: brightness(0.9) contrast(1.1);
+      margin-bottom: 1.5rem;
+    }
+
+    #insidePhrase {
+      font-size: 1.3rem;
+      color: #0f62fe;
+      text-align: center;
+      font-weight: 500;
     }
 
     footer {
@@ -143,49 +184,44 @@
     @media (max-width: 640px) {
       .scene { width: 140px; height: 140px; }
       .face  { width: 140px; height: 140px; }
-      .phrase { font-size: 1.1rem; }
       h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
+
 <body>
   <h1>The Uncertainty Box</h1>
   <p class="subtitle">Observe. Collapse. Discover.</p>
 
   <div class="scene" id="boxScene">
-  <div class="cube">
-    <div class="face front">
-      <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" />
-      <p class="inside-text" id="insideText">Click to measure</p>
+    <div class="cube" id="cube">
+      <div class="face front">
+        <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" />
+        <p class="inside-text" id="insideText">Click to measure</p>
+      </div>
+      <div class="face back"></div>
+      <div class="face right"></div>
+      <div class="face left"></div>
+      <div class="face top"></div>
+      <div class="face bottom"></div>
     </div>
-    <div class="face back"></div>
-    <div class="face right"></div>
-    <div class="face left"></div>
-    <div class="face top"></div>
-    <div class="face bottom"></div>
   </div>
-</div>
-
-
-  <div class="phrase" id="phrase">Click the box to measure.</div>
 
   <footer>
     Created by Inés Alonso · Computer Science & Quantum Computing
   </footer>
 
-  <script>
-    const phrase = document.getElementById('phrase');
-    const insideText = document.getElementById('insideText');
+  <!-- Inside "measured" state -->
+  <div class="inside-view" id="insideView">
+    <img src="cat-outline.png" alt="Schrödinger's cat" class="cat-large" />
+    <p id="insidePhrase">You measured |LinkedIn⟩</p>
+  </div>
 
-    function collapseBox() {
-      insideText.classList.add('fade-out');
-      setTimeout(() => {
-        const { text, url } = randomCollapse();
-        insideText.innerHTML = `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        insideText.classList.remove('fade-out');
-      }, 500);
-    }
-    // Define collapses → each "state" links somewhere different
+  <script>
+    const cube = document.getElementById('cube');
+    const insideView = document.getElementById('insideView');
+    const insidePhrase = document.getElementById('insidePhrase');
+
     const collapses = [
       { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/inesalonsocl/" },
       { text: "You measured |GitHub⟩", url: "https://github.com/inesalonsoo" },
@@ -205,14 +241,19 @@
     }
 
     function collapseBox() {
-      phrase.classList.add('fade-out');
+      const { text, url } = randomCollapse();
+      insidePhrase.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
+      
+      // Play cube opening animation
+      cube.classList.add('opening');
+
+      // Show inside view after animation
       setTimeout(() => {
-        const { text, url } = randomCollapse();
-        phrase.innerHTML = `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        phrase.classList.remove('fade-out');
-      }, 500);
+        insideView.classList.add('active');
+      }, 1500);
     }
 
+    const boxScene = document.getElementById('boxScene');
     boxScene.addEventListener('click', collapseBox);
     boxScene.setAttribute('tabindex', '0');
     boxScene.setAttribute('role', 'button');
