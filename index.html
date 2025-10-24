@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="The Uncertainty Box - Observe, collapse, discover." />
+  <meta name="description" content="The Uncertainty Box - Inés Alonso: Computer Scientist, Quantum Systems Researcher" />
   <title>The Uncertainty Box</title>
 
   <!-- Google Font -->
@@ -74,6 +74,33 @@
       justify-content: center;
       font-weight: 500;
       color: #0f1621;
+      overflow: hidden;
+    }
+    
+    /* Cat silhouette inside cube */
+    .cat {
+      position: absolute;
+      width: 70%;
+      opacity: 0.25;
+      filter: brightness(0.9) contrast(1.1);
+      pointer-events: none;
+      user-select: none;
+    }
+    
+    /* Measurement text inside cube */
+    .inside-text {
+      position: relative;
+      z-index: 2;
+      color: #0f62fe;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .front  { transform: translateZ(90px); }
@@ -126,15 +153,19 @@
   <p class="subtitle">Observe. Collapse. Discover.</p>
 
   <div class="scene" id="boxScene">
-    <div class="cube">
-      <div class="face front"></div>
-      <div class="face back"></div>
-      <div class="face right"></div>
-      <div class="face left"></div>
-      <div class="face top"></div>
-      <div class="face bottom"></div>
+  <div class="cube">
+    <div class="face front">
+      <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" />
+      <p class="inside-text" id="insideText">Click to measure</p>
     </div>
+    <div class="face back"></div>
+    <div class="face right"></div>
+    <div class="face left"></div>
+    <div class="face top"></div>
+    <div class="face bottom"></div>
   </div>
+</div>
+
 
   <div class="phrase" id="phrase">Click the box to measure.</div>
 
@@ -144,14 +175,22 @@
 
   <script>
     const phrase = document.getElementById('phrase');
-    const boxScene = document.getElementById('boxScene');
+    const insideText = document.getElementById('insideText');
 
+    function collapseBox() {
+      insideText.classList.add('fade-out');
+      setTimeout(() => {
+        const { text, url } = randomCollapse();
+        insideText.innerHTML = `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        insideText.classList.remove('fade-out');
+      }, 500);
+    }
     // Define collapses → each "state" links somewhere different
     const collapses = [
-      { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/yourusername" },
-      { text: "You measured |GitHub⟩", url: "https://github.com/yourusername" },
-      { text: "You measured |Portfolio⟩", url: "https://yourportfolio.com" },
-      { text: "You measured |Résumé⟩", url: "https://drive.google.com/your-resume-link" }
+      { text: "You measured |LinkedIn⟩", url: "https://linkedin.com/in/inesalonsocl/" },
+      { text: "You measured |GitHub⟩", url: "https://github.com/inesalonsoo" },
+      { text: "You measured |Portfolio⟩", url: "https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" },
+      { text: "You measured |Résumé⟩", url: "https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78" }
     ];
 
     let lastIndex = -1;
