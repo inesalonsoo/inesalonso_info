@@ -4,181 +4,201 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="The Uncertainty Box – Inés Alonso: Computer Scientist & Quantum Systems Researcher" />
-  <title>The Uncertainty Box</title>
+  <title>The Uncertainty Box | Inés Alonso</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
+    :root {
+      --glass: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --apple-blue: #0071e3;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
     body {
-      font-family:'Inter',sans-serif;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-      align-items:center;
-      color:#0f1621;
-      overflow:hidden;
-      padding-top:10vh;
-      position:relative;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      background: #f5f5f7;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* 🌌 Animated quantum field background */
-    body::before {
-      content:"";
-      position:fixed;
-      top:0; left:0; right:0; bottom:0;
-      background:linear-gradient(135deg,#cfe9ff 0%,#eaf4ff 30%,#bcd4ff 70%,#d9ecff 100%);
-      background-size:300% 300%;
-      animation:fieldShift 12s ease-in-out infinite;
-      z-index:-2;
+    /* 🌌 Background "Quantum Field" Animation */
+    .bg-gradient {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 20% 30%, #e0eafc 0%, #cfdef3 100%);
+      z-index: -2;
     }
 
-    body::after {
-      content:"";
-      position:fixed;
-      top:0; left:0; right:0; bottom:0;
-      background:radial-gradient(circle at 50% 60%,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0) 70%);
-      z-index:-1;
+    .blob {
+      position: absolute;
+      width: 600px; height: 600px;
+      background: linear-gradient(135deg, rgba(0, 113, 227, 0.08) 0%, rgba(200, 220, 255, 0.15) 100%);
+      filter: blur(80px);
+      border-radius: 50%;
+      z-index: -1;
+      animation: float 25s infinite alternate ease-in-out;
     }
 
-    @keyframes fieldShift {
-      0% {background-position:0% 50%;}
-      50% {background-position:100% 50%;}
-      100% {background-position:0% 50%;}
+    @keyframes float {
+      from { transform: translate(-15%, -15%); }
+      to { transform: translate(15%, 15%); }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      z-index: 10;
     }
 
     h1 {
-      font-size:2rem;
-      font-weight:400;
-      color:#0f1621;
-      margin-bottom:0.8rem;
-      text-align:center;
+      font-size: 3.2rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
     }
 
     .subtitle {
-      font-size:0.95rem;
-      color:#3d4a63;
-      font-style:italic;
-      margin-bottom:2.5rem;
-      text-align:center;
+      font-size: 1.1rem;
+      color: var(--text-sub);
+      font-weight: 400;
+      letter-spacing: 0.01em;
     }
 
+    /* 📦 The Glass Cube Scene */
     .scene {
-      width:200px;
-      height:200px;
-      perspective:700px;
-      cursor:pointer;
-      position:relative;
-      z-index:10;
+      width: 260px;
+      height: 260px;
+      perspective: 1500px;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
     }
+
+    .scene:active { transform: scale(0.96); }
 
     .cube {
-      width:100%; height:100%;
-      position:relative;
-      transform-style:preserve-3d;
-      transform:rotateX(-15deg) rotateY(25deg);
-      transition:transform 1s ease;
+      width: 100%; height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(35deg);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .scene:hover .cube:not(.opening) {
-      transform:rotateX(-15deg) rotateY(385deg);
+      transform: rotateX(-15deg) rotateY(55deg) scale(1.04);
     }
 
     .face {
-      position:absolute;
-      width:200px; height:200px;
-      background:linear-gradient(135deg,#b2d0ff,#8fb9ff);
-      border:1px solid rgba(255,255,255,0.4);
-      box-shadow:0 8px 20px rgba(10,30,70,0.12);
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
+      position: absolute;
+      width: 260px; height: 260px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
     }
 
-    .front{transform:translateZ(100px);}
-    .back{transform:rotateY(180deg) translateZ(100px);}
-    .right{transform:rotateY(90deg) translateZ(100px);}
-    .left{transform:rotateY(-90deg) translateZ(100px);}
-    .top{transform:rotateX(90deg) translateZ(100px);}
-    .bottom{transform:rotateX(-90deg) translateZ(100px);}
+    .front  { transform: translateZ(130px); }
+    .back   { transform: rotateY(180deg) translateZ(130px); }
+    .right  { transform: rotateY(90deg) translateZ(130px); }
+    .left   { transform: rotateY(-90deg) translateZ(130px); }
+    .top    { transform: rotateX(90deg) translateZ(130px); }
+    .bottom { transform: rotateX(-90deg) translateZ(130px); }
 
     .inside-text {
-      position:relative;
-      z-index:2;
-      color:#0f62fe;
-      font-size:1rem;
-      font-weight:500;
-      text-align:center;
-      opacity:1;
-      transition:opacity 0.6s ease;
-      pointer-events:auto;
-      transform:translateY(5px);
+      color: var(--apple-blue);
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 24px;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
-
-    .inside-text.fade-out {opacity:0;}
 
     .cat {
-      position:absolute;
-      width:70%;
-      opacity:0;
-      filter:brightness(0.9) contrast(1.1);
-      transition:opacity 1.2s ease;
-      pointer-events:none;
-      user-select:none;
+      position: absolute;
+      width: 65%;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s ease;
+      transform: scale(0.85);
+      pointer-events: none;
     }
 
-    .cat.visible {opacity:0.25;}
+    .cat.visible { opacity: 0.35; transform: scale(1); }
 
-    .cube.opening {animation:openCube 1.8s forwards ease-in-out;}
-    @keyframes openCube {
-      0% {transform:rotateX(-15deg) rotateY(25deg) scale(1);}
-      100% {transform:rotateX(0deg) rotateY(0deg) translateZ(110px) scale(1.3);}
+    .cube.opening { transform: rotateX(0deg) rotateY(0deg) scale(1.15); }
+
+    /* 💡 Instruction Hint (Revealed after measurement) */
+    .reset-hint {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--apple-blue);
+      background: rgba(0, 113, 227, 0.08);
+      padding: 10px 20px;
+      border-radius: 30px;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      font-weight: 500;
     }
 
-    .cube.resetting {animation:resetCube 1.5s forwards ease-in-out;}
-    @keyframes resetCube {
-      0% {transform:rotateX(0deg) rotateY(0deg) translateZ(110px) scale(1.3);}
-      100% {transform:rotateX(-15deg) rotateY(25deg) scale(1);}
+    .reset-hint.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     footer {
-      font-size:0.85rem;
-      color:#4b5b74;
-      margin-top:3.5rem;
-      text-align:center;
-      padding-bottom:1rem;
-      z-index:10;
+      position: fixed;
+      bottom: 2.5rem;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      text-align: center;
+      width: 100%;
+      letter-spacing: 0.02em;
     }
 
-    a.link {
-      color:#0f62fe;
-      text-decoration:none;
-      font-weight:500;
-    }
+    .link { color: var(--apple-blue); text-decoration: none; transition: opacity 0.2s; }
+    .link:hover { opacity: 0.7; }
 
-    a.link:hover {text-decoration:underline;}
-
-    @media (max-width:640px){
-      body{padding-top:6vh;}
-      .scene{width:160px;height:160px;perspective:550px;}
-      .face{width:160px;height:160px;}
-      h1{font-size:1.5rem;}
-      .subtitle{font-size:0.9rem;}
-      .inside-text{font-size:0.9rem;transform:translateY(3px);}
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      .scene, .face { width: 200px; height: 200px; }
+      .front { transform: translateZ(100px); }
+      .back { transform: rotateY(180deg) translateZ(100px); }
+      .right { transform: rotateY(90deg) translateZ(100px); }
+      .left { transform: rotateY(-90deg) translateZ(100px); }
+      .top { transform: rotateX(90deg) translateZ(100px); }
+      .bottom { transform: rotateX(-90deg) translateZ(100px); }
     }
   </style>
 </head>
 
 <body>
-  <h1>The Uncertainty Box</h1>
-  <p class="subtitle">Observe. Collapse. Discover.</p>
+  <div class="bg-gradient"></div>
+  <div class="blob"></div>
+
+  <header>
+    <h1>The Uncertainty Box</h1>
+    <p class="subtitle">Observe. Collapse. Discover.</p>
+  </header>
 
   <div class="scene" id="boxScene">
     <div class="cube" id="cube">
       <div class="face front">
         <img src="cat-outline.png" alt="Schrödinger's cat" class="cat" id="catImage" />
-        <p class="inside-text" id="insideText">Click to measure</p>
+        <p class="inside-text" id="insideText">Tap to Measure Probability</p>
       </div>
       <div class="face back"></div>
       <div class="face right"></div>
@@ -188,76 +208,70 @@
     </div>
   </div>
 
-  <footer>Created by Inés Alonso · Computer Science & Quantum Computing</footer>
+  <div class="reset-hint" id="resetHint">Click outside the box to reset state</div>
+
+  <footer>
+    <p>Inés Alonso · <strong>Computer Science & Physics</strong></p>
+    <p style="margin-top: 8px; font-size: 0.7rem; text-transform: uppercase; opacity: 0.6;">Interdisciplinary Research Portfoliio</p>
+  </footer>
 
   <script>
-    const cube=document.getElementById('cube');
-    const insideText=document.getElementById('insideText');
-    const catImage=document.getElementById('catImage');
-    const boxScene=document.getElementById('boxScene');
-    let measured=false;
+    const cube = document.getElementById('cube');
+    const insideText = document.getElementById('insideText');
+    const catImage = document.getElementById('catImage');
+    const boxScene = document.getElementById('boxScene');
+    const resetHint = document.getElementById('resetHint');
+    let measured = false;
 
-    const collapses=[
-      {text:"You measured |LinkedIn⟩",url:"https://linkedin.com/in/inesalonsocl/"},
-      {text:"You measured |GitHub⟩",url:"https://github.com/inesalonsoo"},
-      {text:"You measured |Portfolio⟩",url:"https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"},
-      {text:"You measured |Résumé⟩",url:"https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78"}
+    const collapses = [
+      { text: "Collapse into |LinkedIn⟩", url: "https://linkedin.com/in/inesalonsocl/" },
+      { text: "Collapse into |GitHub⟩", url: "https://github.com/inesalonsoo" },
+      { text: "Collapse into |Portfolio⟩", url: "https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" },
+      { text: "Collapse into |Résumé⟩", url: "https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78" }
     ];
-    let lastIndex=-1;
 
-    function randomCollapse(){
-      let newIndex;
-      do{newIndex=Math.floor(Math.random()*collapses.length);}
-      while(newIndex===lastIndex&&collapses.length>1);
-      lastIndex=newIndex;
-      return collapses[newIndex];
-    }
-
-    function collapseBox(){
-      if(!measured){
-        const {text,url}=randomCollapse();
-        insideText.classList.add('fade-out');
-        setTimeout(()=>{
-          insideText.innerHTML=`<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${text}</a>`;
-          insideText.classList.remove('fade-out');
+    function collapseBox() {
+      if (!measured) {
+        const choice = collapses[Math.floor(Math.random() * collapses.length)];
+        insideText.style.opacity = '0';
+        insideText.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+          insideText.innerHTML = `<a href="${choice.url}" target="_blank" class="link">${choice.text}</a>`;
+          insideText.style.opacity = '1';
+          insideText.style.transform = 'translateY(0)';
           catImage.classList.add('visible');
-        },700);
-        cube.classList.remove('resetting');
+          resetHint.classList.add('show'); 
+        }, 400);
+
         cube.classList.add('opening');
-        measured=true;
+        measured = true;
       }
     }
 
-    function resetBox(){
-      if(measured){
-        insideText.classList.add('fade-out');
-        setTimeout(()=>{
-          insideText.textContent="Click to measure";
-          insideText.classList.remove('fade-out');
+    function resetBox() {
+      if (measured) {
+        insideText.style.opacity = '0';
+        insideText.style.transform = 'translateY(10px)';
+        resetHint.classList.remove('show');
+        setTimeout(() => {
+          insideText.textContent = "Tap to Measure Probability";
+          insideText.style.opacity = '1';
+          insideText.style.transform = 'translateY(0)';
           catImage.classList.remove('visible');
-        },500);
+        }, 400);
         cube.classList.remove('opening');
-        cube.classList.add('resetting');
-        measured=false;
+        measured = false;
       }
     }
 
-    boxScene.addEventListener('click',collapseBox);
-    document.addEventListener('click',e=>{
-      const clickedInside=boxScene.contains(e.target);
-      const clickedLink=e.target.closest('a.link');
-      if(!clickedInside&&measured)resetBox();
-      if(clickedLink)e.stopPropagation();
+    boxScene.addEventListener('click', (e) => {
+      e.stopPropagation();
+      collapseBox();
     });
 
-    boxScene.setAttribute('tabindex','0');
-    boxScene.setAttribute('role','button');
-    boxScene.setAttribute('aria-label','Click to collapse into a new state');
-    boxScene.addEventListener('keypress',e=>{
-      if(e.key==='Enter'||e.key===' '){
-        e.preventDefault();
-        collapseBox();
-      }
+    document.addEventListener('click', (e) => {
+      if (!boxScene.contains(e.target)) resetBox();
     });
   </script>
 </body>
