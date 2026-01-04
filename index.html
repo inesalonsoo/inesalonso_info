@@ -57,7 +57,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 2rem;
       z-index: 10;
     }
 
@@ -73,6 +73,25 @@
       color: var(--text-sub);
       font-weight: 400;
       letter-spacing: 0.01em;
+    }
+
+    /* 👤 About & How it Works Section */
+    .about-container {
+      max-width: 500px;
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      z-index: 10;
+    }
+
+    .about-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-main);
     }
 
     /* 📦 The Glass Cube Scene */
@@ -193,6 +212,14 @@
     <h1>The Uncertainty Box</h1>
     <p class="subtitle">Observe. Collapse. Discover.</p>
   </header>
+
+  <section class="about-container">
+    <p class="about-text">
+      <strong>Hi! I'm Inés.</strong> I'm a Computer Science student at Florida Poly with a background in Physics from the University of Barcelona. 
+      I explore the intersection of quantum mechanics, computation, and the study of complex systems. This box is in a <strong>superposition</strong> of my professional world. 
+      Tap the box to "measure" the system and collapse it into one of four observable links. Will the cat be alive or dead?
+    </p>
+  </section>
 
   <div class="scene" id="boxScene">
     <div class="cube" id="cube">
