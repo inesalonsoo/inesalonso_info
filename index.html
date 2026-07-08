@@ -6,6 +6,19 @@
   <meta name="description" content="The Uncertainty Box – Inés Alonso: Computer Scientist & Quantum Systems Researcher" />
   <title>The Uncertainty Box | Inés Alonso</title>
 
+  <link rel="icon" type="image/png" href="cat-outline1.png" />
+
+  <link rel="canonical" href="https://inesalonsoo.github.io/inesalonso_info/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Uncertainty Box | Inés Alonso" />
+  <meta property="og:description" content="Computer Scientist & Quantum Systems Researcher — tap the box to collapse the superposition and discover LinkedIn, GitHub, portfolio, or résumé." />
+  <meta property="og:url" content="https://inesalonsoo.github.io/inesalonso_info/" />
+  <meta property="og:image" content="https://inesalonsoo.github.io/inesalonso_info/cat-outline.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Uncertainty Box | Inés Alonso" />
+  <meta name="twitter:description" content="Computer Scientist & Quantum Systems Researcher — tap the box to collapse the superposition and discover LinkedIn, GitHub, portfolio, or résumé." />
+  <meta name="twitter:image" content="https://inesalonsoo.github.io/inesalonso_info/cat-outline.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -109,6 +122,12 @@
 
     .scene:active { transform: scale(0.96); }
 
+    .scene:focus-visible {
+      outline: 3px solid var(--apple-blue);
+      outline-offset: 6px;
+      border-radius: 12px;
+    }
+
     .cube {
       width: 100%; height: 100%;
       position: relative;
@@ -194,6 +213,106 @@
 
     .link { color: var(--apple-blue); text-decoration: none; transition: opacity 0.2s; }
     .link:hover { opacity: 0.7; }
+    .link:focus-visible { outline: 2px solid var(--apple-blue); outline-offset: 2px; border-radius: 4px; }
+
+    /* 📜 Measurement Log (persistent link list, revealed after first collapse) */
+    .measurement-log {
+      margin-top: 1.5rem;
+      max-width: 320px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .measurement-log.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    .log-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-sub);
+      margin-bottom: 0.6rem;
+    }
+
+    .log-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 1rem;
+    }
+
+    .log-list a.link { font-size: 0.9rem; font-weight: 500; }
+
+    /* 🔬 Research & Projects Section */
+    .projects {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 4rem;
+      z-index: 10;
+    }
+
+    .projects-header { text-align: center; margin-bottom: 2rem; }
+
+    .projects-header h2 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
+
+    .projects-header p { color: var(--text-sub); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    /* Reserved space for a future per-project explainer animation */
+    .project-visual {
+      height: 80px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgba(0, 113, 227, 0.06) 0%, rgba(200, 220, 255, 0.12) 100%);
+      border: 1px dashed rgba(0, 113, 227, 0.2);
+    }
+
+    .project-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+
+    .project-meta {
+      font-size: 0.72rem;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card p.project-desc {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      flex-grow: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-badge {
+      font-size: 0.72rem;
+      color: var(--text-sub);
+      font-style: italic;
+    }
+
+    .projects-footer { text-align: center; margin-top: 2rem; }
 
     @media (max-width: 768px) {
       h1 { font-size: 2.2rem; }
@@ -204,6 +323,13 @@
       .left { transform: rotateY(-90deg) translateZ(100px); }
       .top { transform: rotateX(90deg) translateZ(100px); }
       .bottom { transform: rotateX(-90deg) translateZ(100px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blob { animation: none; }
+      .scene, .cube, .face, .inside-text, .cat, .reset-hint, .measurement-log {
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
@@ -224,11 +350,11 @@
     </p>
   </section>
 
-  <div class="scene" id="boxScene">
+  <div class="scene" id="boxScene" role="button" tabindex="0" aria-label="Measure the box to reveal a link">
     <div class="cube" id="cube">
       <div class="face front">
-        <img src="cat-outline1.png" alt="Schrödinger's cat" class="cat" id="catImage" />
-        <p class="inside-text" id="insideText">Tap to Measure Probability</p>
+        <img src="cat-outline1.png" alt="Illustration of Schrödinger's cat" class="cat" id="catImage" />
+        <p class="inside-text" id="insideText" aria-live="polite">Tap to Measure Probability</p>
       </div>
       <div class="face back"></div>
       <div class="face right"></div>
@@ -239,6 +365,76 @@
   </div>
 
   <div class="reset-hint" id="resetHint">Click outside the box to reset state</div>
+
+  <div class="measurement-log" id="measurementLog">
+    <p class="log-title">All possible outcomes</p>
+    <ul class="log-list">
+      <li><a class="link" href="https://linkedin.com/in/inesalonsocl/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a class="link" href="https://github.com/inesalonsoo" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a class="link" href="https://www.canva.com/design/DAGW5C1NbTE/pGyRvesVQ1MyImqqENIqCA/edit?utm_content=DAGW5C1NbTE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" rel="noopener">Portfolio</a></li>
+      <li><a class="link" href="https://acrobat.adobe.com/id/urn:aaid:sc:EU:6dd349c5-6620-4330-bec2-a79609570d78" target="_blank" rel="noopener">Résumé</a></li>
+    </ul>
+  </div>
+
+  <section class="projects" aria-labelledby="projectsHeading">
+    <div class="projects-header">
+      <h2 id="projectsHeading">Research & Projects</h2>
+      <p>A few other states worth measuring.</p>
+    </div>
+    <div class="project-grid">
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">Threshold360 · Research Lead · Sep 2025 – May 2026</p>
+        <h3>Mobile-Based 3D Scene Capture</h3>
+        <p class="project-desc">Distributed 3D scene reconstruction pipeline (FastAPI, CUDA, Gaussian Splatting) generating mobile virtual tours in under 60 minutes.</p>
+        <span class="project-badge">Private — sponsor-owned code</span>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">NASA FL Space Grant Consortium · Space Trek · Mar 2025</p>
+        <h3>High-Altitude Balloon Recovery & Sensing</h3>
+        <p class="project-desc">Arduino-based altitude-triggered parachute deployment and real-time cosmic-ray, UV, and magnetic-field sensing for a hydrogen balloon payload.</p>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">Independent research · Nov 2025</p>
+        <h3>Attention Feedback for Hierarchical Reasoning Models</h3>
+        <p class="project-desc">Bidirectional cross-attention feedback on the Hierarchical Reasoning Model — 85.15% F1 on HotPotQA with a 60.6M-parameter model, outperforming larger SOTA LLMs.</p>
+        <a class="link" href="https://github.com/shriraj-m/HRM-for-coherence.git" target="_blank" rel="noopener">View code →</a>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">ICFO · SPIE@ICFO María Yzuel Fellowship · May 2025 – Present</p>
+        <h3>LHCII Intramolecular MSM Pipeline</h3>
+        <p class="project-desc">Markov State Models of LHCII protein conformational dynamics across pH/PsbS conditions — TICA-based pipeline over ~87,000 trajectory frames resolving ten metastable kinetic basins.</p>
+        <span class="project-badge">Code coming soon</span>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">Florida Polytechnic University · Feb 2024 – Present</p>
+        <h3>Quantum Software Research Assistant</h3>
+        <p class="project-desc">Noise-resilient q-sc-SF-EOM quantum chemistry pipeline (Qiskit, PySCF) achieving a 70% reduction in CNOT gate overhead for correlated molecular ground states.</p>
+        <span class="project-badge">Code coming soon</span>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true"></div>
+        <p class="project-meta">Florida Polytechnic University · Feb 2026 – Apr 2026</p>
+        <h3>Comparative Analysis of AI Coding Assistants</h3>
+        <p class="project-desc">Full-stack framework benchmarking AI coding assistants on correctness, efficiency, and security across standardized programming tasks.</p>
+        <a class="link" href="https://github.com/Naibitx/SFComparativeAnalysis.git" target="_blank" rel="noopener">View code →</a>
+      </article>
+
+    </div>
+    <div class="projects-footer">
+      <a class="link" href="https://github.com/inesalonsoo" target="_blank" rel="noopener">See all repos on GitHub →</a>
+    </div>
+  </section>
 
   <footer>
     <p>Inés Alonso · <strong>Computer Science & Physics</strong></p>
@@ -251,6 +447,7 @@
     const catImage = document.getElementById('catImage');
     const boxScene = document.getElementById('boxScene');
     const resetHint = document.getElementById('resetHint');
+    const measurementLog = document.getElementById('measurementLog');
     let measured = false;
 
     const collapses = [
@@ -267,11 +464,12 @@
         insideText.style.transform = 'translateY(-10px)';
         
         setTimeout(() => {
-          insideText.innerHTML = `<a href="${choice.url}" target="_blank" class="link">${choice.text}</a>`;
+          insideText.innerHTML = `<a href="${choice.url}" target="_blank" rel="noopener" class="link">${choice.text}</a>`;
           insideText.style.opacity = '1';
           insideText.style.transform = 'translateY(0)';
           catImage.classList.add('visible');
-          resetHint.classList.add('show'); 
+          resetHint.classList.add('show');
+          measurementLog.classList.add('show');
         }, 400);
 
         cube.classList.add('opening');
@@ -298,6 +496,14 @@
     boxScene.addEventListener('click', (e) => {
       e.stopPropagation();
       collapseBox();
+    });
+
+    boxScene.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.stopPropagation();
+        collapseBox();
+      }
     });
 
     document.addEventListener('click', (e) => {
