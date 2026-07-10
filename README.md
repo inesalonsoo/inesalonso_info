@@ -1,4 +1,4 @@
-# The Uncertainty Box
+# The Uncertainty Box | Inés Alonso
 
 Inés Alonso's personal landing page — a single static HTML/CSS/JS page, no build step, no framework.
 
